@@ -22,7 +22,7 @@ export default function Header() {
       style={{ zIndex: 100 }}
     >
       {/* LOGO & NAV */}
-      <section className="flex items-center lg:gap-20 gap-5">
+      <section className="flex items-center lg:gap-10 gap-5">
         <Link href="/">
           <Image
             src={LOGO.desktop}
@@ -30,7 +30,7 @@ export default function Header() {
             width={150}
             height={100}
             priority
-            className="hidden lg:flex"
+            className="hidden xl:flex"
           />
           <Image
             src={LOGO.mobile}
@@ -38,13 +38,13 @@ export default function Header() {
             width={30}
             height={30}
             priority
-            className="lg:hidden flex"
+            className="xl:hidden flex"
           />
         </Link>
 
         <HeaderNavLinks pathname={pathname} />
 
-        <Button variant="outline" className="lg:hidden flex">
+        <Button variant="outline" className="2xl:hidden flex">
           <span className="sr-only">Search</span>
           <FiSearch />
         </Button>
@@ -53,7 +53,7 @@ export default function Header() {
       {/* SEARCH INPUT */}
       <Input
         placeholder="Type here to search..."
-        className="flex-1 hidden lg:flex text-center max-w-[650px]"
+        className="flex-1 hidden 2xl:flex text-center max-w-[650px]"
       />
 
       {/* TOGGLES & DROPDOWNS */}

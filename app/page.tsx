@@ -8,9 +8,9 @@ export default function Home() {
   return (
     <section className="min-h-screen flex flex-col font-[family-name:var(--font-geist-sans)] lg:px-20 md:px-10 px-5">
       <Header />
-      <main className="w-full flex-1 mt-6">
-        {/* XL Layout */}
-        <div className="hidden xl:grid xl:grid-cols-[350px_1fr_400px] gap-10">
+      <main className="w-full flex-1 mt-6 pb-20">
+        {/* XL Layout (3 columns) */}
+        <div className="hidden xl:grid xl:grid-cols-[300px_1fr_350px] gap-10">
           <SidebarLeft />
           <section className="flex flex-col gap-6">
             <HeroPostInput />
@@ -19,8 +19,17 @@ export default function Home() {
           <SidebarRight />
         </div>
 
-        {/* Mobile + Tablet */}
-        <div className="flex flex-col gap-6 xl:hidden">
+        {/* LG Layout (2 columns: content + right sidebar) */}
+        <div className="hidden lg:grid xl:hidden grid-cols-[1fr_300px] gap-10">
+          <section className="flex flex-col gap-6">
+            <HeroPostInput />
+            <PostFeed />
+          </section>
+          <SidebarRight />
+        </div>
+
+        {/* Mobile + Tablet (<lg): stacked layout */}
+        <div className="flex flex-col gap-6 lg:hidden">
           <HeroPostInput />
           <PostFeed />
           <SidebarLeft />

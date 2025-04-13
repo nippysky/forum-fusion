@@ -15,7 +15,7 @@ interface HeaderNavLinksProps {
 
 export default function HeaderNavLinks({ pathname }: HeaderNavLinksProps) {
   return (
-    <nav className="lg:flex items-center gap-10 hidden">
+    <nav className="xl:flex items-center gap-10 hidden">
       {HEADER_LINKS.map((link) => {
         const isActive = pathname === link.href;
         return (

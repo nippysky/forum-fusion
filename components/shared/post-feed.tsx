@@ -71,7 +71,7 @@ export default function PostFeed() {
         return (
           <Card key={post.id} className="w-full border rounded-2xl shadow-sm">
             <CardContent>
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-start sm:items-center">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-start sm:items-start flex-wrap">
                 {/* IMAGE */}
                 <div className="w-full sm:w-[130px] min-w-[100px] h-auto rounded-xl flex flex-col items-center justify-center">
                   <Image
@@ -84,15 +84,16 @@ export default function PostFeed() {
                 </div>
 
                 {/* CONTENT */}
-                <div className="flex-1 space-y-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <h2 className="font-semibold text-base leading-snug">
+                <div className="flex-1 w-full space-y-3 min-w-0">
+                  <div className="flex items-start justify-between gap-3 flex-wrap">
+                    <h2 className="font-semibold text-base leading-snug break-words">
                       {post.title}
                     </h2>
                     <Button
                       size="icon"
                       variant="ghost"
                       onClick={() => toggleLike(post.id)}
+                      className="shrink-0"
                     >
                       {isLiked ? (
                         <HeartIcon className="fill-red-500 text-red-500" />
@@ -110,7 +111,7 @@ export default function PostFeed() {
                     ))}
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-sm text-muted-foreground pt-2 gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-sm text-muted-foreground pt-2 gap-2 flex-wrap">
                     <Link
                       href={post.author.profileUrl}
                       className="flex items-center gap-2 hover:underline"
