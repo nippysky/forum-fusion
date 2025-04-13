@@ -6,7 +6,6 @@ import { PiHashBold } from "react-icons/pi";
 import { MdGroup } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 
 const tags = [
   { label: "#javascript", count: 82645 },
@@ -34,8 +33,7 @@ const navItems = [
 
 export default function SidebarLeft() {
   return (
-    <aside className="hidden lg:flex flex-col gap-6">
-      {/* NAV TABS */}
+    <aside className="flex flex-col gap-6 w-full">
       <Card className="rounded-xl">
         <CardContent className="p-4 space-y-3">
           {navItems.map((item, idx) => (
@@ -65,7 +63,6 @@ export default function SidebarLeft() {
         </CardContent>
       </Card>
 
-      {/* POPULAR TAGS */}
       <Card className="rounded-xl">
         <CardContent className="p-4">
           <h4 className="text-sm font-semibold mb-3">Popular Tags</h4>
@@ -91,7 +88,6 @@ export default function SidebarLeft() {
         </CardContent>
       </Card>
 
-      {/* PINNED GROUP */}
       <Card className="rounded-xl">
         <CardContent className="p-4">
           <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">

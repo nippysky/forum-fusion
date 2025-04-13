@@ -47,8 +47,7 @@ const podcasts = [
 
 export default function SidebarRight() {
   return (
-    <aside className="hidden lg:flex flex-col gap-8">
-      {/* Meetups */}
+    <aside className="flex flex-col gap-8 w-full">
       <div>
         <div className="flex items-center gap-2 mb-3 text-sm font-semibold">
           <CalendarDays className="w-4 h-4" /> Meetups
@@ -82,7 +81,6 @@ export default function SidebarRight() {
         </Card>
       </div>
 
-      {/* Podcasts */}
       <div>
         <div className="flex items-center gap-2 mb-3 text-sm font-semibold">
           <Mic className="w-4 h-4" /> Podcasts
