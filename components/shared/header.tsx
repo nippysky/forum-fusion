@@ -19,7 +19,7 @@ export default function Header() {
   return (
     <header
       className="flex items-center justify-between w-full py-3 lg:gap-20 gap-10 sticky top-0 bg-background"
-      style={{ zIndex: 100 }}
+      style={{ zIndex: 9 }}
     >
       {/* LOGO & NAV */}
       <section className="flex items-center lg:gap-10 gap-5">
