@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { toast } from "sonner";
 import Link from "next/link";
-import { Heart, HeartIcon } from "lucide-react";
+import {
+  Ellipsis,
+  MessageCircle,
+  Share,
+  ThumbsDown,
+  ThumbsUp,
+} from "lucide-react";
 
 const posts = [
   {
@@ -21,122 +24,101 @@ const posts = [
       avatar: "https://github.com/shadcn.png",
       profileUrl: "/profile/pavel-gvay",
     },
-    views: 651324,
     likes: 36545,
     comments: 56,
     time: "3 weeks ago",
-    value: "$20,788",
-    growth: "+0.25%",
-  },
-  {
-    id: 2,
-    title: "The 4-step SEO framework that led to a 1000% increase...",
-    tags: ["seo", "blogging", "traffic"],
-    image: "https://github.com/shadcn.png",
-    author: {
-      name: "AR Jakir",
-      avatar: "https://github.com/shadcn.png",
-      profileUrl: "/profile/ar-jakir",
-    },
-    views: 244564,
-    likes: 10920,
-    comments: 184,
-    time: "3 days ago",
   },
 ];
 
 export default function PostFeed() {
-  const [likedPosts, setLikedPosts] = useState<number[]>([]);
-
-  const toggleLike = (postId: number) => {
-    setLikedPosts((prev) => {
-      const isLiked = prev.includes(postId);
-      const updated = isLiked
-        ? prev.filter((id) => id !== postId)
-        : [...prev, postId];
-
-      toast.success(isLiked ? "Like removed" : "You liked this post!", {
-        duration: 2000,
-      });
-
-      return updated;
-    });
-  };
-
   return (
-    <div className="flex flex-col gap-6">
-      {posts.map((post) => {
-        const isLiked = likedPosts.includes(post.id);
+    <section className="flex flex-col gap-5">
+      {posts.map((post) => (
+        <Card key={post.id} className="w-full shadow-sm">
+          <CardContent>
+            <section className="flex flex-col gap-4">
+              {/* Aurthor Logo and Post Details */}
+              <div className="flex gap-2 justify-between px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <Link href={post.author.profileUrl}>
+                    <Avatar>
+                      <AvatarImage
+                        src={post.author.avatar}
+                        alt={post.author.name}
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </Link>
 
-        return (
-          <Card key={post.id} className="w-full border rounded-2xl shadow-sm">
-            <CardContent>
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-start sm:items-start flex-wrap">
-                {/* IMAGE */}
-                <div className="w-full sm:w-[130px] min-w-[100px] h-auto rounded-xl flex flex-col items-center justify-center">
-                  <Image
-                    src={post.image}
-                    alt="post chart"
-                    width={100}
-                    height={100}
-                    className="rounded-md object-contain"
-                  />
-                </div>
-
-                {/* CONTENT */}
-                <div className="flex-1 w-full space-y-3 min-w-0">
-                  <div className="flex items-start justify-between gap-3 flex-wrap">
-                    <h2 className="font-semibold text-base leading-snug break-words">
-                      {post.title}
-                    </h2>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => toggleLike(post.id)}
-                      className="shrink-0"
-                    >
-                      {isLiked ? (
-                        <HeartIcon className="fill-red-500 text-red-500" />
-                      ) : (
-                        <Heart />
-                      )}
-                    </Button>
-                  </div>
-
-                  <div className="flex gap-2 flex-wrap">
-                    {post.tags.map((tag, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-sm text-muted-foreground pt-2 gap-2 flex-wrap">
-                    <Link
-                      href={post.author.profileUrl}
-                      className="flex items-center gap-2 hover:underline"
-                    >
-                      <Avatar className="w-6 h-6">
-                        <AvatarImage src={post.author.avatar} alt="avatar" />
-                        <AvatarFallback>
-                          {post.author.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <p className="text-xs font-medium">{post.author.name}</p>
-                      <span className="text-[10px]">· {post.time}</span>
-                    </Link>
-                    <div className="flex items-center gap-4 text-xs flex-wrap">
-                      <span>{post.views.toLocaleString()} Views</span>
-                      <span>{post.likes.toLocaleString()} Likes</span>
-                      <span>{post.comments} comments</span>
+                  <div className="flex flex-col gap-0">
+                    <div className="flex items-center gap-1">
+                      <p className="font-semibold tracking-wide text-[0.9rem]">
+                        {post.author.name}
+                      </p>
+                      <small className="text-muted-foreground">@username</small>
                     </div>
+                    <small className="text-muted-foreground">{post.time}</small>
                   </div>
                 </div>
+
+                <Button variant={"ghost"}>
+                  <Ellipsis size={20} />
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-        );
-      })}
-    </div>
+
+              {/* Post (exceprt woth read more) */}
+              <div className="px-3">
+                <p className="text-[0.85rem] font-normal">
+                  Lorem Ipsum is simply dummy text of the printing and
+                  typesetting industry. Lorem Ipsum has been the industry's
+                  standard dummy text ever since the 1500s, when an unknown
+                  printer took a galley of type and scrambled it
+                </p>
+              </div>
+
+              {/* Image If any */}
+              <div className="w-full mt-1 relative h-96">
+                <Image
+                  src={"https://github.com/shadcn.png"}
+                  alt={"Post Logo"}
+                  fill
+                  priority
+                  className="absolute object-center object-cover"
+                />
+              </div>
+
+              {/* Post Engagement Summary */}
+              <div className=" border-b border-b-border pb-2 flex items-center justify-between text-muted-foreground px-5">
+                <div className="flex items-center gap-2">
+                  <small>1.2K up</small>
+                  <small>120 down</small>
+                </div>
+                <small>120 comments</small>
+              </div>
+
+              {/* Post Actions */}
+              <div className="flex items-center justify-evenly gap-2 pb-2">
+                <Button variant={"ghost"}>
+                  <ThumbsUp />
+                  <span className="hidden lg:flex">Fuse up</span>
+                </Button>
+                <Button variant={"ghost"}>
+                  <ThumbsDown />
+                  <span className="hidden lg:flex">Fuse down</span>
+                </Button>
+                <Button variant={"ghost"}>
+                  <MessageCircle />
+                  <span className="hidden lg:flex">Comment</span>
+                </Button>
+                <Button variant={"ghost"}>
+                  <Share />
+                  <span className="hidden lg:flex">Share</span>
+                </Button>
+              </div>
+            </section>
+          </CardContent>
+        </Card>
+      ))}
+    </section>
   );
 }

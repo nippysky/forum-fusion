@@ -1,10 +1,8 @@
-import BigLogo from "@/public/FF_DesktopLogo.png"
-import SmallLogo from "@/public/FF_MobileLogo.png"
+import FFIcon from "@/public/ForumFusion_Icon.svg"
 
 
 const LOGO = {
-    desktop:BigLogo, 
-    mobile: SmallLogo
+   icon: FFIcon
 }
 
 

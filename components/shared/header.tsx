@@ -1,67 +1,120 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { LOGO } from "@/lib/images";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import { HEADER_LINKS } from "@/lib/app-data";
 import { ThemeToggle } from "./theme-toggler";
-import { FiSearch } from "react-icons/fi";
-
-import HeaderNavLinks from "./header-navlinks";
-import HeaderDropdowns from "./header-dropdowns";
+import { Bell, Menu, MessageCircle, Search } from "lucide-react";
+import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 
 export default function Header() {
-  const pathname = usePathname();
-
   return (
     <header
-      className="flex items-center justify-between w-full py-3 lg:gap-20 gap-10 sticky top-0 bg-background"
       style={{ zIndex: 9 }}
+      className="sticky top-0 py-1 bg-background flex justify-between items-center gap-5"
     >
-      {/* LOGO & NAV */}
-      <section className="flex items-center lg:gap-10 gap-5">
-        <Link href="/">
+      {/* Logo & Search Bar */}
+      <section className="flex items-center gap-5 w-full">
+        <Link href={"/"}>
           <Image
-            src={LOGO.desktop}
-            alt="FF Logo"
-            width={150}
-            height={100}
-            priority
-            className="hidden xl:flex"
-          />
-          <Image
-            src={LOGO.mobile}
-            alt="FF Logo"
+            src={LOGO.icon}
+            alt="ForumFusion Logo Icon"
             width={30}
             height={30}
             priority
-            className="xl:hidden flex"
           />
         </Link>
 
-        <HeaderNavLinks pathname={pathname} />
+        <Search size={20} className="flex lg:hidden cursor-pointer" />
 
-        <Button variant="outline" className="2xl:hidden flex">
-          <span className="sr-only">Search</span>
-          <FiSearch />
-        </Button>
+        <Input
+          placeholder="Search Fusion"
+          className="max-w-[385px] hidden lg:block"
+        />
       </section>
 
-      {/* SEARCH INPUT */}
-      <Input
-        placeholder="Type here to search..."
-        className="flex-1 hidden 2xl:flex text-center max-w-[650px]"
-      />
+      {/* Nav Links | Profile | Setttings */}
+      <section className="flex items-center gap-5 justify-end">
+        <nav className="lg:flex hidden items-center gap-5">
+          {HEADER_LINKS.map((link) => {
+            return (
+              <Link
+                key={link.title}
+                href={link.href}
+                className="transition-all duration-300 ease-in-out p-2 rounded-lg hover:bg-muted flex flex-col items-center justify-center gap-1.5"
+              >
+                {link.icon}
+                <span className="text-xs">{link.title}</span>
+              </Link>
+            );
+          })}
+        </nav>
 
-      {/* TOGGLES & DROPDOWNS */}
-      <section className="flex items-center lg:gap-10 gap-5 justify-end">
-        <div className="hidden md:flex">
+        <div className="flex items-center gap-5">
+          <Link
+            href={"/"}
+            className="transition-all duration-300 ease-in-out p-2 rounded-lg hover:bg-muted lg:flex flex-col items-center justify-center gap-1.5 hidden "
+          >
+            <MessageCircle size={20} />
+            <span className="text-xs hidden lg:flex">Message</span>
+          </Link>
+
+          <Link
+            href={"/"}
+            className="transition-all duration-300 ease-in-out p-2 rounded-lg hover:bg-muted lg:flex flex-col items-center justify-center gap-1.5 hidden "
+          >
+            <Bell size={20} />
+            <span className="text-xs hidden lg:flex">Notification</span>
+          </Link>
+
+          <Link
+            href={"/"}
+            className="transition-all duration-300 ease-in-out p-2 rounded-lg hover:bg-muted flex flex-col items-center justify-center"
+          >
+            <Avatar>
+              <AvatarImage
+                src="https://github.com/shadcn.png"
+                alt="@shadcn"
+                width={20}
+                height={20}
+              />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+
+            <span className="text-xs hidden lg:flex">Profile</span>
+          </Link>
+
           <ThemeToggle />
+
+          {/* Mobile Menu */}
+          <div className="inline-flex lg:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline">
+                  <Menu size={20} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader className="hidden">
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <ScrollArea className="flex-1 w-full h-full p-5"></ScrollArea>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
-        <HeaderDropdowns />
       </section>
     </header>
   );

@@ -45,7 +45,7 @@ const podcasts = [
   },
 ];
 
-export default function SidebarRight() {
+export default function HomeRight() {
   return (
     <aside className="flex flex-col gap-8 w-full">
       <div>
