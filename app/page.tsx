@@ -32,8 +32,6 @@ export default function Home() {
         <div className="flex flex-col gap-6 lg:hidden">
           <HeroPostInput />
           <PostFeed />
-          <HomeLeft />
-          <HomeRight />
         </div>
       </main>
     </section>

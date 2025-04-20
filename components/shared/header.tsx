@@ -81,17 +81,17 @@ export default function Header() {
 
           <Link
             href={"/"}
-            className="transition-all duration-300 ease-in-out p-2 rounded-lg hover:bg-muted flex flex-col items-center justify-center"
+            className="transition-all duration-300 ease-in-out p-2 rounded-lg hover:bg-muted flex flex-col items-center justify-center gap-1.5"
           >
-            <Avatar>
-              <AvatarImage
+            <div className="relative w-[20px] h-[20px] rounded-full overflow-hidden">
+              <Image
                 src="https://github.com/shadcn.png"
                 alt="@shadcn"
-                width={20}
-                height={20}
+                fill
+                priority
+                className="object-center object-cover"
               />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            </div>
 
             <span className="text-xs hidden lg:flex">Profile</span>
           </Link>
