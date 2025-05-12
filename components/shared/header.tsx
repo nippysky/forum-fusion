@@ -6,9 +6,8 @@ import Link from "next/link";
 import React from "react";
 import { HEADER_LINKS } from "@/lib/app-data";
 import { ThemeToggle } from "./theme-toggler";
-import { Bell, Menu, MessageCircle, Search } from "lucide-react";
+import { Bell, Menu, Search } from "lucide-react";
 import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import {
@@ -67,14 +66,6 @@ export default function Header() {
             href={"/"}
             className="transition-all duration-300 ease-in-out p-2 rounded-lg hover:bg-muted lg:flex flex-col items-center justify-center gap-1.5 hidden "
           >
-            <MessageCircle size={20} />
-            <span className="text-xs hidden lg:flex">Message</span>
-          </Link>
-
-          <Link
-            href={"/"}
-            className="transition-all duration-300 ease-in-out p-2 rounded-lg hover:bg-muted lg:flex flex-col items-center justify-center gap-1.5 hidden "
-          >
             <Bell size={20} />
             <span className="text-xs hidden lg:flex">Notification</span>
           </Link>
@@ -95,8 +86,6 @@ export default function Header() {
 
             <span className="text-xs hidden lg:flex">Profile</span>
           </Link>
-
-          <ThemeToggle />
 
           {/* Mobile Menu */}
           <div className="inline-flex lg:hidden">

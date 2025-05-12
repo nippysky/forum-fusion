@@ -82,3 +82,63 @@ export const FEED_POSTS = [
     },
   ];
   
+export const WHO_TO_FOLLOW = [
+  {
+    name: "Product Hunt",
+    handle: "@ProductHunt",
+    avatar: "https://github.com/shadcn.png",
+  },
+  {
+    name: "Mark Zuckerberg",
+    handle: "@MZuckerberg_",
+    avatar: "https://github.com/shadcn.png",
+  },
+  {
+    name: "Ryan Hoover",
+    handle: "@rrhoover",
+    avatar: "https://github.com/shadcn.png",
+  },
+  {
+    name: "Elon Musk",
+    handle: "@elonmusk",
+    avatar: "https://github.com/shadcn.png",
+  },
+  {
+    name: "Ada Lovelace",
+    handle: "@adalovelace",
+    avatar: "https://github.com/shadcn.png",
+  },
+];
+
+export const TOP_POSTS = [
+  {
+    id: 1,
+    title: "Why is it that no one wants to...",
+    author: "andy_ebuks",
+    date: "Fri-Mar | 2025",
+  },
+  {
+    id: 2,
+    title: "Why is it that no one wants to...",
+    author: "andy_ebuks",
+    date: "Fri-Mar | 2025",
+  },
+  {
+    id: 3,
+    title: "Why is it that no one wants to...",
+    author: "andy_ebuks",
+    date: "Fri-Mar | 2025",
+  },
+  {
+    id: 4,
+    title: "Why is it that no one wants to...",
+    author: "andy_ebuks",
+    date: "Fri-Mar | 2025",
+  },
+  {
+    id: 5,
+    title: "Why is it that no one wants to...",
+    author: "andy_ebuks",
+    date: "Fri-Mar | 2025",
+  },
+];
