@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { HEADER_LINKS } from "@/lib/app-data";
-import { ThemeToggle } from "./theme-toggler";
 import { Bell, Menu, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";

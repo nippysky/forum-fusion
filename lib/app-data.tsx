@@ -9,24 +9,13 @@ import NewIcon from "@/components/svg/New";
 import PopularIcon from "@/components/svg/Popular";
 import Support from "@/components/svg/Support";
 import Technology from "@/components/svg/Technology";
-import {
-  Component,
-  Flame,
-  House,
-  LayoutDashboard,
-  Telescope,
-} from "lucide-react";
+import { Component, House, LayoutDashboard, Telescope } from "lucide-react";
 
 export const HEADER_LINKS = [
   {
     title: "Home",
     href: "/",
     icon: <House size={20} />,
-  },
-  {
-    title: "Blasts",
-    href: "/blasts",
-    icon: <Flame size={20} />,
   },
   {
     title: "Explore",
