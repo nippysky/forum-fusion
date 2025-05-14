@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -20,74 +19,10 @@ import {
   X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import ShareModal from "../shared/ShareModal";
-
-const DUMMY_BLAST = {
-  id: 1,
-  content:
-    "Here's an insightful blast about why TypeScript improves DX without sacrificing JS flexibility.",
-  images: [
-    "https://github.com/shadcn.png",
-    "https://github.com/shadcn.png",
-    "https://github.com/shadcn.png",
-    "https://github.com/shadcn.png",
-    "https://github.com/shadcn.png",
-  ],
-  tags: [
-    "typescript",
-    "developer",
-    "webdev",
-    "testing",
-    "We trying",
-    "Nothing",
-    "and",
-    "everything",
-  ],
-  likes: 230,
-  downs: 14,
-  author: {
-    name: "Sara Lin",
-    username: "saralin",
-    avatar: "https://github.com/shadcn.png",
-  },
-  time: "1h ago",
-  comments: [
-    {
-      id: 1,
-      user: {
-        name: "John Doe",
-        avatar: "https://github.com/shadcn.png",
-        handle: "@johndoe",
-      },
-      comment:
-        "I totally agree! TS is like a superpower once you get used to it.",
-      replies: [
-        {
-          id: 3,
-          user: {
-            name: "Jane Dev",
-            avatar: "https://github.com/shadcn.png",
-            handle: "@janedev",
-          },
-          comment: "Same here, my productivity has skyrocketed!",
-        },
-      ],
-    },
-    {
-      id: 2,
-      user: {
-        name: "Alex Code",
-        avatar: "https://github.com/shadcn.png",
-        handle: "@alexcode",
-      },
-      comment: "Still prefer JS for quick prototypes tho.",
-      replies: [],
-    },
-  ],
-};
+import ShareModal from "../shared/share-modal";
+import { DUMMY_BLAST } from "@/lib/dummy";
 
 export default function BlastDetails() {
-  const router = useRouter();
   const { author, content, images, tags, likes, downs, time, comments } =
     DUMMY_BLAST;
 
@@ -99,7 +34,11 @@ export default function BlastDetails() {
   const [commentText, setCommentText] = useState("");
   const [commentImage, setCommentImage] = useState<File | null>(null);
   const [replyingTo, setReplyingTo] = useState<Record<number, string>>({});
+  const [replyImages, setReplyImages] = useState<Record<number, File | null>>(
+    {}
+  );
 
+  // close menu on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (!(e.target as HTMLElement).closest(".post-action-menu")) {
@@ -110,11 +49,31 @@ export default function BlastDetails() {
     return () => document.removeEventListener("click", handler);
   }, []);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCommentImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) setCommentImage(file);
   };
-  const removeImage = () => setCommentImage(null);
+  const removeCommentImage = () => setCommentImage(null);
+
+  const handleReplyImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) setReplyImages((prev) => ({ ...prev, [id]: file }));
+  };
+  const removeReplyImage = (id: number) =>
+    setReplyImages((prev) => ({ ...prev, [id]: null }));
+
+  const toggleReply = (id: number) => {
+    setReplyingTo((prev) => {
+      if (id in prev) {
+        const { [id]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [id]: "" };
+    });
+  };
 
   return (
     <div className="w-full shadow-sm rounded-xl border border-border bg-background">
@@ -131,41 +90,43 @@ export default function BlastDetails() {
               <small className="text-xs text-muted-foreground">
                 @{author.username}
               </small>
-              <small className="text-xs text-muted-foreground">{time}</small>
             </div>
           </div>
-          <div className="relative post-action-menu">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpenMenu((o) => !o);
-              }}
-            >
-              <Ellipsis size={20} />
-            </Button>
-            <AnimatePresence>
-              {openMenu && (
-                <motion.ul
-                  initial={{ opacity: 0, scale: 0.95, y: -5 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: -5 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 rounded-md shadow-lg border border-border p-2 text-sm space-y-1 z-50"
-                >
-                  <li className="flex items-center gap-2 p-2 hover:bg-muted cursor-pointer">
-                    <UserPlus size={16} /> Follow
-                  </li>
-                  <li className="flex items-center gap-2 p-2 hover:bg-muted cursor-pointer">
-                    <Flag size={16} /> Report
-                  </li>
-                  <li className="flex items-center gap-2 p-2 hover:bg-muted cursor-pointer">
-                    <Bookmark size={16} /> Save
-                  </li>
-                </motion.ul>
-              )}
-            </AnimatePresence>
+          <div className="flex items-center gap-2">
+            <small className="text-xs text-muted-foreground">{time}</small>
+            <div className="relative post-action-menu">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenMenu((o) => !o);
+                }}
+              >
+                <Ellipsis size={20} />
+              </Button>
+              <AnimatePresence>
+                {openMenu && (
+                  <motion.ul
+                    initial={{ opacity: 0, scale: 0.95, y: -5 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -5 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 rounded-md shadow-lg border border-border p-2 text-sm space-y-1 z-50"
+                  >
+                    <li className="flex items-center gap-2 p-2 hover:bg-muted cursor-pointer">
+                      <UserPlus size={16} /> Follow
+                    </li>
+                    <li className="flex items-center gap-2 p-2 hover:bg-muted cursor-pointer">
+                      <Flag size={16} /> Report
+                    </li>
+                    <li className="flex items-center gap-2 p-2 hover:bg-muted cursor-pointer">
+                      <Bookmark size={16} /> Save
+                    </li>
+                  </motion.ul>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
@@ -277,7 +238,7 @@ export default function BlastDetails() {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={handleImageChange}
+                  onChange={handleCommentImageChange}
                 />
                 <ImageIcon size={18} />
               </label>
@@ -285,9 +246,8 @@ export default function BlastDetails() {
                 size="sm"
                 disabled={!commentText.trim()}
                 onClick={() => {
-                  console.log("Post comment", commentText, commentImage);
                   setCommentText("");
-                  removeImage();
+                  removeCommentImage();
                   setCommentOpen(false);
                 }}
               >
@@ -304,7 +264,7 @@ export default function BlastDetails() {
                 />
                 <button
                   className="absolute top-1 right-1 bg-black bg-opacity-70 text-white rounded-full p-1"
-                  onClick={removeImage}
+                  onClick={removeCommentImage}
                 >
                   <X size={12} />
                 </button>
@@ -328,7 +288,12 @@ export default function BlastDetails() {
         </AnimatePresence>
       </CardContent>
 
-      {/* Comments */}
+      {/* Comments Header */}
+      <div className="px-5 pt-4 my-10">
+        <h3 className="text-sm font-medium">{comments.length} Comments</h3>
+      </div>
+
+      {/* Comments Thread */}
       <div className="px-5 pb-6 space-y-6">
         {comments.map((c) => (
           <div
@@ -345,19 +310,20 @@ export default function BlastDetails() {
                 <p className="text-sm font-medium">{c.user.name}</p>
                 <p className="text-xs text-muted-foreground">{c.user.handle}</p>
                 <p className="text-sm mt-1">{c.comment}</p>
-                <button
-                  className="text-xs text-blue-600 mt-2 hover:underline"
-                  onClick={() =>
-                    setReplyingTo((r) => ({
-                      ...r,
-                      [c.id]: r[c.id] !== undefined ? "" : "",
-                    }))
-                  }
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="p-0 mt-2"
+                  onClick={() => toggleReply(c.id)}
                 >
-                  Reply
-                </button>
+                  {c.replies.length > 0
+                    ? `${c.replies.length} ${
+                        c.replies.length === 1 ? "Reply" : "Replies"
+                      }`
+                    : "Reply"}
+                </Button>
                 {replyingTo[c.id] !== undefined && (
-                  <div className="mt-2">
+                  <div className="mt-2 space-y-2">
                     <textarea
                       rows={3}
                       value={replyingTo[c.id]}
@@ -367,37 +333,260 @@ export default function BlastDetails() {
                       placeholder="Write a reply..."
                       className="w-full text-sm px-4 py-2 rounded-md border border-border bg-background focus:outline-none resize-none"
                     />
-                    <div className="text-right mt-1">
+                    <div className="flex items-center justify-between">
+                      <label className="cursor-pointer flex items-center gap-2">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleReplyImageChange(e, c.id)}
+                        />
+                        <ImageIcon size={18} />
+                      </label>
                       <Button
                         size="sm"
                         disabled={!replyingTo[c.id]?.trim()}
                         onClick={() => {
-                          console.log("Reply", c.id, replyingTo[c.id]);
+                          console.log(
+                            "Reply",
+                            c.id,
+                            replyingTo[c.id],
+                            replyImages[c.id]
+                          );
                           setReplyingTo((r) => ({ ...r, [c.id]: "" }));
+                          removeReplyImage(c.id);
                         }}
                       >
                         Reply
                       </Button>
                     </div>
+                    {replyImages[c.id] && (
+                      <div className="relative w-40 h-24 mt-2">
+                        <NextImage
+                          src={URL.createObjectURL(replyImages[c.id]!)}
+                          alt="reply-preview"
+                          fill
+                          className="object-cover rounded-md border"
+                        />
+                        <button
+                          className="absolute top-1 right-1 bg-black bg-opacity-70 text-white rounded-full p-1"
+                          onClick={() => removeReplyImage(c.id)}
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
             </div>
+
+            {/* Nested replies */}
             {c.replies.length > 0 && (
               <div className="pl-6 mt-2 border-l border-border space-y-4 relative">
-                {c.replies.map((r) => (
-                  <div key={r.id} className="flex items-start gap-3">
-                    <Avatar>
-                      <AvatarImage src={r.user.avatar} />
-                      <AvatarFallback>{r.user.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium">{r.user.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {r.user.handle}
-                      </p>
-                      <p className="text-sm mt-1">{r.comment}</p>
+                {c.replies.map((reply) => (
+                  <div key={reply.id} className="flex flex-col gap-2">
+                    <div className="flex items-start gap-3">
+                      <Avatar>
+                        <AvatarImage src={reply.user.avatar} />
+                        <AvatarFallback>{reply.user.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="w-full">
+                        <p className="text-sm font-medium">{reply.user.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {reply.user.handle}
+                        </p>
+                        <p className="text-sm mt-1">{reply.comment}</p>
+
+                        {/* Reply button */}
+                        <Button
+                          variant="link"
+                          size="sm"
+                          className="p-0 mt-2"
+                          onClick={() => toggleReply(reply.id)}
+                        >
+                          {reply.replies?.length
+                            ? `${reply.replies.length} ${
+                                reply.replies.length === 1 ? "Reply" : "Replies"
+                              }`
+                            : "Reply"}
+                        </Button>
+
+                        {/* Reply textarea */}
+                        {replyingTo[reply.id] !== undefined && (
+                          <div className="mt-2 space-y-2">
+                            <textarea
+                              rows={3}
+                              value={replyingTo[reply.id]}
+                              onChange={(e) =>
+                                setReplyingTo((prev) => ({
+                                  ...prev,
+                                  [reply.id]: e.target.value,
+                                }))
+                              }
+                              placeholder="Write a reply..."
+                              className="w-full text-sm px-4 py-2 rounded-md border border-border bg-background focus:outline-none resize-none"
+                            />
+                            <div className="flex items-center justify-between">
+                              <label className="cursor-pointer flex items-center gap-2">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) =>
+                                    handleReplyImageChange(e, reply.id)
+                                  }
+                                />
+                                <ImageIcon size={18} />
+                              </label>
+                              <Button
+                                size="sm"
+                                disabled={!replyingTo[reply.id]?.trim()}
+                                onClick={() => {
+                                  console.log(
+                                    "Reply",
+                                    reply.id,
+                                    replyingTo[reply.id],
+                                    replyImages[reply.id]
+                                  );
+                                  setReplyingTo((prev) => ({
+                                    ...prev,
+                                    [reply.id]: "",
+                                  }));
+                                  removeReplyImage(reply.id);
+                                }}
+                              >
+                                Reply
+                              </Button>
+                            </div>
+                            {replyImages[reply.id] && (
+                              <div className="relative w-40 h-24 mt-2">
+                                <NextImage
+                                  src={URL.createObjectURL(
+                                    replyImages[reply.id]!
+                                  )}
+                                  alt="reply-preview"
+                                  fill
+                                  className="object-cover rounded-md border"
+                                />
+                                <button
+                                  className="absolute top-1 right-1 bg-black bg-opacity-70 text-white rounded-full p-1"
+                                  onClick={() => removeReplyImage(reply.id)}
+                                >
+                                  <X size={12} />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
+
+                    {/* Replies of replies (guarded) */}
+                    {reply.replies?.length > 0 && (
+                      <div className="pl-6 mt-2 border-l border-border space-y-4 relative">
+                        {reply.replies.map((nested) => (
+                          <div
+                            key={nested.id}
+                            className="flex items-start gap-3"
+                          >
+                            <Avatar>
+                              <AvatarImage src={nested.user.avatar} />
+                              <AvatarFallback>
+                                {nested.user.name[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="w-full">
+                              <p className="text-sm font-medium">
+                                {nested.user.name}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {nested.user.handle}
+                              </p>
+                              <p className="text-sm mt-1">{nested.comment}</p>
+
+                              <Button
+                                variant="link"
+                                size="sm"
+                                className="p-0 mt-2"
+                                onClick={() => toggleReply(nested.id)}
+                              >
+                                Reply
+                              </Button>
+
+                              {replyingTo[nested.id] !== undefined && (
+                                <div className="mt-2 space-y-2">
+                                  <textarea
+                                    rows={3}
+                                    value={replyingTo[nested.id]}
+                                    onChange={(e) =>
+                                      setReplyingTo((prev) => ({
+                                        ...prev,
+                                        [nested.id]: e.target.value,
+                                      }))
+                                    }
+                                    placeholder="Write a reply..."
+                                    className="w-full text-sm px-4 py-2 rounded-md border border-border bg-background focus:outline-none resize-none"
+                                  />
+                                  <div className="flex items-center justify-between">
+                                    <label className="cursor-pointer flex items-center gap-2">
+                                      <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) =>
+                                          handleReplyImageChange(e, nested.id)
+                                        }
+                                      />
+                                      <ImageIcon size={18} />
+                                    </label>
+                                    <Button
+                                      size="sm"
+                                      disabled={!replyingTo[nested.id]?.trim()}
+                                      onClick={() => {
+                                        console.log(
+                                          "Nested reply",
+                                          nested.id,
+                                          replyingTo[nested.id],
+                                          replyImages[nested.id]
+                                        );
+                                        setReplyingTo((prev) => ({
+                                          ...prev,
+                                          [nested.id]: "",
+                                        }));
+                                        removeReplyImage(nested.id);
+                                      }}
+                                    >
+                                      Reply
+                                    </Button>
+                                  </div>
+                                  {replyImages[nested.id] && (
+                                    <div className="relative w-40 h-24 mt-2">
+                                      <NextImage
+                                        src={URL.createObjectURL(
+                                          replyImages[nested.id]!
+                                        )}
+                                        alt="nested-reply-preview"
+                                        fill
+                                        className="object-cover rounded-md border"
+                                      />
+                                      <button
+                                        className="absolute top-1 right-1 bg-black bg-opacity-70 text-white rounded-full p-1"
+                                        onClick={() =>
+                                          removeReplyImage(nested.id)
+                                        }
+                                      >
+                                        <X size={12} />
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

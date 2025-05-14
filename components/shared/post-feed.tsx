@@ -23,7 +23,7 @@ import { FEED_POSTS } from "@/lib/dummy";
 import PostFeedSkeleton from "../skeletons/PostFeedSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import ShareModal from "./ShareModal";
+import ShareModal from "./share-modal";
 
 export default function PostFeed() {
   const router = useRouter();

@@ -62,7 +62,7 @@ export default function Header() {
 
         <div className="flex items-center gap-5">
           <Link
-            href={"/"}
+            href={"/notification"}
             className="transition-all duration-300 ease-in-out p-2 rounded-lg hover:bg-muted lg:flex flex-col items-center justify-center gap-1.5 hidden "
           >
             <Bell size={20} />

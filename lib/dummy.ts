@@ -142,3 +142,79 @@ export const TOP_POSTS = [
     date: "Fri-Mar | 2025",
   },
 ];
+
+
+
+interface Reply {
+  id: number;
+  user: { name: string; avatar: string; handle: string };
+  comment: string;
+  replies: Reply[]; // recursively refer to yourself
+}
+
+interface Blast {
+  id: number;
+  content: string;
+  images: string[];
+  tags: string[];
+  likes: number;
+  downs: number;
+  author: { name: string; username: string; avatar: string };
+  time: string;
+  comments: Reply[]; // top-level comments
+}
+
+// Now TypeScript knows the exact shape
+export const DUMMY_BLAST: Blast = {
+  id: 1,
+  content:
+    "Here's an insightful blast about why TypeScript improves DX without sacrificing JS flexibility.",
+  images: [
+    "https://github.com/shadcn.png",
+    "https://github.com/shadcn.png",
+    "https://github.com/shadcn.png",
+  ],
+  tags: [
+    "typescript",
+    "developer",
+    "webdev",
+    "testing",
+    "We trying",
+    "Nothing",
+    "and",
+    "everything",
+  ],
+  likes: 230,
+  downs: 14,
+  author: {
+    name: "Sara Lin",
+    username: "saralin",
+    avatar: "https://github.com/shadcn.png",
+  },
+  time: "1h ago",
+  comments: [
+    {
+      id: 1,
+      user: { name: "John Doe", avatar: "...", handle: "@johndoe" },
+      comment: "...",
+      replies: [
+        {
+          id: 3,
+          user: {
+            name: "Jane Dev",
+            avatar: "https://github.com/shadcn.png",
+            handle: "@janedev",
+          },
+          comment: "...",
+          replies: [], // empty array is okay, it’s a Reply[]
+        },
+      ],
+    },
+    {
+      id: 2,
+      user: { name: "Alex Code", avatar: "...", handle: "@alexcode" },
+      comment: "...",
+      replies: [],
+    },
+  ],
+};
